@@ -32,6 +32,7 @@ export default class Calculator extends Component {
       const equal = operation === '=';
       const currentOperation = this.state.operation;
       const values = [...this.state.values];
+      let divisionByZero = false;
 
       switch (currentOperation) {
         case '+':
@@ -41,7 +42,15 @@ export default class Calculator extends Component {
           values[0] = values[0] - values[1];
           break;
         case '/':
-          values[0] = values[0] / values[1];
+          /**
+           * Division by ZERO
+           */
+          if (values[1] === 0) {
+            values[0] = 0;
+            divisionByZero = true;
+          } else {
+            values[0] = values[0] / values[1];
+          }
           break;
         case '*':
           values[0] = values[0] * values[1];
@@ -51,7 +60,7 @@ export default class Calculator extends Component {
       }
       values[1] = 0;
       this.setState({ 
-        displayValue: parseFloat(values[0].toFixed(2)), 
+        displayValue: divisionByZero ? 'Error' : parseFloat(values[0].toFixed(2)), 
         operation: equal ? null : operation, 
         current: equal ? 0 : 1,
         clearDisplay: !equal,
@@ -65,9 +74,15 @@ export default class Calculator extends Component {
       return
     }
 
-    const clearDisplay = this.state.displayValue === '0' || this.state.clearDisplay;
+    const clearDisplay = this.state.displayValue === '0' || this.state.displayValue === 'Error' || this.state.clearDisplay;
     const currentValue = clearDisplay ? '' : this.state.displayValue;
-    const displayValue = currentValue + digit;
+    let displayValue = currentValue;
+    /**
+     * Display shows a maximum of 10 digits
+     */
+    if (displayValue.length <= 9) {
+      displayValue = currentValue + digit;
+    }
     this.setState({ displayValue, clearDisplay: false });
 
     if (digit !== '.') {
@@ -75,6 +90,10 @@ export default class Calculator extends Component {
       const values = [...this.state.values];
       values[this.state.current] = newValue;
       this.setState({ values });
+      /**
+       * Show the current values ​​uncomment the line below
+       */
+      // console.log(values);
     }
   }
   
