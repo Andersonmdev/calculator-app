@@ -10,6 +10,7 @@ const Button =  (props) => {
         ${props.operation ? 'operation' : ''}
         ${props.double ? 'double' : ''}
         ${props.triple ? 'triple' : ''}
+        ${props.delete ? 'delete' : ''}
     `}>
       {props.label}
     </button>

@@ -17,6 +17,7 @@ export default class Calculator extends Component {
     super(props);
     this.clearMemory = this.clearMemory.bind(this);
     this.setOperation = this.setOperation.bind(this);
+    this.deleteDigit = this.deleteDigit.bind(this);
   }
 
   state = { ...initialState };
@@ -59,8 +60,10 @@ export default class Calculator extends Component {
           break;
       }
       values[1] = 0;
+      const testResponse = values[0].toString();
+      const response = (testResponse.length > 10) ? parseFloat(testResponse.substring(0, 10)) : values[0]; 
       this.setState({ 
-        displayValue: divisionByZero ? 'Error' : parseFloat(values[0].toFixed(2)), 
+        displayValue: divisionByZero ? 'Error' : response, 
         operation: equal ? null : operation, 
         current: equal ? 0 : 1,
         clearDisplay: !equal,
@@ -96,6 +99,15 @@ export default class Calculator extends Component {
       // console.log(values);
     }
   }
+
+  deleteDigit() {
+    const currentValue = this.state.displayValue;
+    const displayValue = currentValue !== '0' && currentValue.length > 1 ? currentValue.substring(0, currentValue.length-1) : '0';
+    const newValue = parseFloat(displayValue);
+    const values = [...this.state.values];
+    values[this.state.current] = newValue;
+    this.setState({ displayValue, values });
+  }
   
   render() {
     /**
@@ -105,7 +117,8 @@ export default class Calculator extends Component {
     return (
       <div className="calculator">
         <Display value={this.state.displayValue} />
-        <Button label="AC" click={this.clearMemory} triple/>
+        <Button label="AC" click={this.clearMemory} double/>
+        <Button label="<" click={this.deleteDigit} delete />
         <Button label="/" click={this.setOperation} operation/>
         <Button label="7" click={addDigit}/>
         <Button label="8" click={addDigit}/>

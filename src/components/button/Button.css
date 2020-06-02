@@ -20,14 +20,10 @@
   grid-column: span 2;
 }
 
-.button.triple {
-  grid-column: span 3;
-}
-
-.button.operation {
+.button.operation, .button.delete {
   background-color: #ffff09;
 }
 
-.button.operation:active {
+.button.operation:active, .button.delete:active {
   background-color: #f2ee8b;
 }
